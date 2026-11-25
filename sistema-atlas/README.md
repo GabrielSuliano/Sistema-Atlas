@@ -54,7 +54,7 @@ Se seu ambiente for diferente, ajuste nesse arquivo.
 - Rate limit por IP em janela curta
 - CORS restrito para origens locais permitidas
 - Cabeçalhos de segurança (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, etc.)
-- Regras Apache para bloquear acesso web direto às pastas `config/` e `database/`
+- Pendência: proteção do servidor para `config/` e `database/`; não há `.htaccess` versionado.
 
 ## Observação importante
 
