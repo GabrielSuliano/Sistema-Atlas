@@ -90,3 +90,25 @@ GET /sistema-atlas/api/index.php?entidade=dashboard
 ## Status
 
 Projeto de portfolio com foco em CRUD, dashboard comercial, organizacao full stack e boas praticas basicas de backend.
+
+## Arquitetura, API e banco
+
+`public/app.js` envia JSON ao front controller `api/index.php`, que valida entradas e usa `config/banco.php` para acessar MySQL via PDO. Não há autenticação: o projeto demonstra CRUD e modelagem de CRM e precisa de controle de acesso antes de receber dados reais.
+
+```mermaid
+erDiagram
+  clientes ||--o{ oportunidades : possui
+  oportunidades ||--o{ atividades : possui
+```
+
+As FKs usam atualização/exclusão em cascata. **`database/schema.sql` contém `DROP TABLE` e recria tabelas**: use somente em banco local descartável após leitura. Não é migration incremental e não foi executado nesta auditoria.
+
+`api/index.php?entidade=...` aceita GET/POST/PUT/DELETE para `clientes`, `oportunidades`, `atividades`; atualização/exclusão usam `id` na query string. `dashboard` aceita GET. POST/PUT recebem JSON. Exemplo: `GET /sistema-atlas/api/index.php?entidade=clientes`.
+
+## Configuração efetiva
+
+Requer PHP 8+, PDO MySQL e mbstring. A conexão é definida diretamente em `sistema-atlas/config/banco.php`; **não há suporte a `.env` ou `DB_*`**. Ajuste sua cópia local para banco de desenvolvimento sem versionar credenciais. Os arquivos `.htaccess` anteriormente mencionados no README interno não estão versionados; a proteção de `config/` e do SQL depende da configuração real do servidor.
+
+## Testes e evolução
+
+Não há suíte automatizada ou deploy verificado. Rate limit por arquivo temporário e CORS local não substituem autorização. Prioridades: login/perfis, testes das FKs/cascatas e proteção dos arquivos de configuração. Não há licença versionada.
